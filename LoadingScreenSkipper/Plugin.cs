@@ -1,20 +1,21 @@
-﻿using PulsarPluginLoader;
+﻿using BepInEx;
+using HarmonyLib;
 
 namespace LoadingScreenSkipper
 {
-    public class Plugin : PulsarPlugin
+    [BepInPlugin("com.18107.cutsceneskipper", "Cutscene Skipper", "0.0.1")]
+    public class Plugin : BaseUnityPlugin
     {
-        public override string Version => "0.0.0";
-
-        public override string Author => "18107";
-
-        public override string ShortDescription => "Skips the cutscene at the start of the game";
-
-        public override string Name => "Cutscene Skipper";
-
-        public override string HarmonyIdentifier()
+        private void Awake()
         {
-            return "mod.id107.cutsceneskipper";
+            Logger.LogInfo("Cutscene Skipper loaded!");
+            var harmony = new Harmony("com.18107.cutsceneskipper");
+            harmony.PatchAll();
+            Logger.LogInfo("Harmony patches applied!");
+            foreach (var method in harmony.GetPatchedMethods())
+            {
+                Logger.LogInfo($"Patched method: {method.DeclaringType.Name}.{method.Name}");
+            }
         }
     }
 }
